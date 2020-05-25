@@ -1,0 +1,50 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion "29.0.3"
+
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug{
+            minifyEnabled false
+        }
+    }
+
+
+    task makeJar(type: Copy) {
+        //删除存在的
+//        delete 'build/libs/myplugin.jar'
+        //设置拷贝的文件
+//        from('build/intermediates/bundles/debug/')
+        from('build/intermediates//aar_main_jar/debug/')
+        //打进jar包后的文件目录
+        include('classes.jar')
+        into('build/libs/')
+        //重命名
+        rename ('classes.jar', 'myplugin.jar')
+    }
+    makeJar.dependsOn(build)
+}
+
+dependencies {
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+
+}
